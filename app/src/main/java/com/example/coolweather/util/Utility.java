@@ -7,18 +7,20 @@ import com.example.coolweather.db.County;
 import com.example.coolweather.db.Province;
 import com.example.coolweather.gson.Weather;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
+/**
+ * @author wzq20
+ */
 public class Utility {
     /**
      * 解析和处理服务器返回的省级数据
      */
-    public static boolean  handleProvinceResponse(String response) {
+    public static boolean handleProvinceResponse(String response) {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allProvinces = new JSONArray(response);
@@ -41,7 +43,7 @@ public class Utility {
     /**
      * 解析和处理服务器返回的市级数据
      */
-    public static boolean handleCityResponse(String response,int provinceId) {
+    public static boolean handleCityResponse(String response, int provinceId) {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allCities = new JSONArray(response);
@@ -65,7 +67,7 @@ public class Utility {
     /**
      * 解析和处理返回的县级数据
      */
-    public static boolean handleCountyResponse(String response,int cityId) {
+    public static boolean handleCountyResponse(String response, int cityId) {
         try {
             if (!TextUtils.isEmpty(response)) {
                 JSONArray allCounties = new JSONArray(response);
@@ -85,6 +87,7 @@ public class Utility {
         }
         return false;
     }
+
     /**
      * 将返回JSON数据解析成 Weather 实体类
      */
@@ -93,7 +96,7 @@ public class Utility {
             JSONObject jsonObject = new JSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
             String weatherContent = jsonArray.getJSONObject(0).toString();
-            return new Gson().fromJson(weatherContent,Weather.class);
+            return new Gson().fromJson(weatherContent, Weather.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

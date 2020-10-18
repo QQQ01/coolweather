@@ -3,6 +3,9 @@ package com.example.coolweather.util;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+/**
+ * @author wzq20
+ */
 public class HttpUtil {
 
     public static void sendOkHttpRequest(String address, okhttp3.Callback callback) {

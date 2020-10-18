@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
@@ -69,7 +69,7 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -246,6 +246,7 @@ public class WeatherActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
     }
+
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
     }

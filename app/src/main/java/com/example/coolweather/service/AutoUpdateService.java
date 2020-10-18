@@ -8,11 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.provider.CalendarContract;
 
-import com.bumptech.glide.ListPreloader;
+import androidx.preference.PreferenceManager;
+
 import com.example.coolweather.gson.Weather;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
@@ -23,6 +21,9 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+/**
+ * @author wzq20
+ */
 public class AutoUpdateService extends Service {
     public AutoUpdateService() {
     }
@@ -39,28 +40,31 @@ public class AutoUpdateService extends Service {
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         // 这是1小时的毫秒数
         int anHour = 60 * 60 * 1000;
-        long triggerAtTime = SystemClock.elapsedRealtime() + 20*1000;
-        Intent i = new Intent(this,AutoUpdateService.class);
-        PendingIntent pi = PendingIntent.getService(this,0,i,0);
+        long triggerAtTime = SystemClock.elapsedRealtime() + 20 * 1000;
+        Intent i = new Intent(this, AutoUpdateService.class);
+        PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
         manager.cancel(pi);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                manager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
+                manager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
             }
         } else {
-            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
+            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void updateWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String weatherString = prefs.getString("weather",null);
+        String weatherString = prefs.getString("weather", null);
 
         if (weatherString != null) {
             // 有缓存直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
-            String weatherId = weather.basic.weatherId;
+            String weatherId = null;
+            if (weather != null) {
+                weatherId = weather.basic.weatherId;
+            }
             String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId
                     + "&key=bd53dc6ca96d481e976b830054f3628d";
             HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
@@ -74,10 +78,10 @@ public class AutoUpdateService extends Service {
                     String responseText = response.body().string();
                     Weather weather = Utility.handleWeatherResponse(responseText);
 
-                    if(weather!=null&& "ok".equals(weather.status)) {
+                    if (weather != null && "ok".equals(weather.status)) {
                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(AutoUpdateService.this)
                                 .edit();
-                        editor.putString("weather",responseText);
+                        editor.putString("weather", responseText);
                         editor.apply();
                     }
                 }
@@ -98,7 +102,7 @@ public class AutoUpdateService extends Service {
             public void onResponse(Call call, Response response) throws IOException {
                 String bingPic = response.body().string();
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(AutoUpdateService.this).edit();
-                editor.putString("bing_pic",bingPic);
+                editor.putString("bing_pic", bingPic);
                 editor.apply();
             }
         });

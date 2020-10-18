@@ -1,6 +1,7 @@
 package com.example.coolweather;
 
-import android.app.ProgressDialog;
+//import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,11 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.coolweather.R;
 import com.example.coolweather.db.City;
 import com.example.coolweather.db.County;
 import com.example.coolweather.db.Province;
-import com.example.coolweather.gson.Weather;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
 
@@ -49,7 +48,7 @@ public class ChooseAreaFragment extends Fragment {
 
     public static final String COUNTY = "county";
 
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
 
     private TextView titleText;
 
@@ -116,14 +115,14 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
-                } else if(currentLevel == LEVEL_COUNTY) {
+                } else if (currentLevel == LEVEL_COUNTY) {
                     String weatherId = countyList.get(position).getWeatherId();
-                    if(getActivity() instanceof MainActivity) {
+                    if (getActivity() instanceof MainActivity) {
                         Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                        intent.putExtra("weather_id",weatherId);
+                        intent.putExtra("weather_id", weatherId);
                         startActivity(intent);
                         getActivity().finish();
-                    } else if( getActivity() instanceof  WeatherActivity) {
+                    } else if (getActivity() instanceof WeatherActivity) {
                         WeatherActivity activity = (WeatherActivity) getActivity();
                         activity.getDrawerLayout().closeDrawers();
                         activity.getSwipeRefresh().setRefreshing(true);
@@ -165,7 +164,7 @@ public class ChooseAreaFragment extends Fragment {
     }
 
     private void queryFromServer(String address, final String type) {
-        showProgressDialog();
+//        showProgressDialog();
         // sendOkHttpRequest()方法会开启一个线程
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
@@ -174,8 +173,8 @@ public class ChooseAreaFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(getContext(),"加载失败",Toast.LENGTH_SHORT).show();
+//                        closeProgressDialog();
+                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -195,7 +194,7 @@ public class ChooseAreaFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            closeProgressDialog();
+//                            closeProgressDialog();
                             if (PROVINCE.equals(type)) {
                                 queryProvinces();
                             } else if (CITY.equals(type)) {
@@ -213,23 +212,23 @@ public class ChooseAreaFragment extends Fragment {
     /**
      * 显示进度对话框
      */
-    private void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在加载");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
+//    private void showProgressDialog() {
+//        if (progressDialog == null) {
+//            progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setMessage("正在加载");
+//            progressDialog.setCanceledOnTouchOutside(false);
+//        }
+//        progressDialog.show();
+//    }
 
     /**
      * 关闭进度对话框
      */
-    private void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
+//    private void closeProgressDialog() {
+//        if (progressDialog != null) {
+//            progressDialog.dismiss();
+//        }
+//    }
 
     private void queryCounties() {
 
@@ -247,7 +246,7 @@ public class ChooseAreaFragment extends Fragment {
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china/" + provinceCode +"/"+cityCode;
+            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
             queryFromServer(address, "county");
         }
     }
